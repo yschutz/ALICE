@@ -1,0 +1,10 @@
+<RCC>
+   <qresource prefix="/textures">
+        <file>images/BlueQuark.png</file>
+        <file>images/GreenQuark.png</file>
+        <file>images/RedQuark.png</file>
+        <file>images/WhiteHadron.png</file>
+        <file>images/IronRed.jpg</file>
+    </qresource>
+</RCC>
+
