@@ -1,5 +1,5 @@
 #include "alice.h"
-#include "annulus.h"
+#include "annulusmesh.h"
 #include "tube.h"
 
 //===================================================================
@@ -36,14 +36,14 @@ void Alice::CreateL3()
     const double kRotate      = 180. / kSides;
 
 
-    Annulus *l3B = new Annulus(kOuterRadius, kInnerRadius, kSides);       // back of L3
+    cgl::AnnulusMesh *l3B = new cgl::AnnulusMesh(kOuterRadius, kInnerRadius, kSides);       // back of L3
     l3B->setObjectName(QString("L3B"));
     l3B->setTextureImage(":/textures/images/IronRed.jpg");
     l3B->rotate(kRotate, 0.0, 0.0, 1.0);
     l3B->translate(0.0, 0.0, -kLength / 2.0);
     mElements.append(l3B);
 
-    Annulus *l3F = new Annulus(kOuterRadius, kInnerRadius, kSides);       // front of L3
+    cgl::AnnulusMesh *l3F = new cgl::AnnulusMesh(kOuterRadius, kInnerRadius, kSides);       // front of L3
     l3F->setObjectName(QString("L3F"));
     l3F->setTextureImage(":/textures/images/BlueQuark.png");
     l3F->rotate(kRotate, 0.0, 0.0, 1.0);

@@ -3,14 +3,14 @@
 
 #include "view.h"
 
-class LaboratoryView : public View
+class LaboratoryView : public cgl::View
 {
     Q_OBJECT
 
 public:
     LaboratoryView();
 
-    void stage();
+
 };
 
 #endif // LABORATORYVIEW_H

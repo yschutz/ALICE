@@ -12,43 +12,19 @@ TARGET = ALICE
 TEMPLATE = app
 
 
-SOURCES += main.cpp
-#    view.cpp \
-#    scene.cpp \
-#    mesh.cpp \
-#    vertex.cpp \
-#    sphere.cpp \
-#    laboratoryview.cpp \
-#    alice.cpp \
-#    annulus.cpp \
-#    polygon.cpp \
-#    tube.cpp \
-#    cylinder.cpp \
-#    collision.cpp \
-#    particle.cpp
-
-#HEADERS  += \
-#    view.h \
-#    scene.h \
-#    mesh.h \
-#    vertex.h \
-#    sphere.h \
-#    laboratoryview.h \
-#    alice.h \
-#    annulus.h \
-#    polygon.h \
-#    tube.h \
-#    cylinder.h \
-#    collision.h \
-#    particle.h
+SOURCES += main.cpp \
+    tube.cpp \
+    alice.cpp \
+    laboratoryview.cpp
 
 
 
-#RESOURCES += \
-#    shaders.qrc \
-#    textures.qrc
-
-#DISTFILES +=
 
 include(cutegl/cutegl.pri)
+
+HEADERS += \
+    tube.h \
+    alice.h \
+    laboratoryview.h
+
 

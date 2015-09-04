@@ -12,13 +12,13 @@ public:
     explicit Alice(QObject *parent = 0);
 
     void Init();
-    QList<Mesh*> Elements() const { return mElements; }
+    QList<cgl::Mesh*> Elements() const { return mElements; }
 
 private:
     void Create();
     void CreateL3();
 
-    QList<Mesh*> mElements; // list of meshes needed to build ALICE
+    QList<cgl::Mesh*> mElements; // list of meshes needed to build ALICE
 };
 
 #endif // ALICE_H
