@@ -20,17 +20,8 @@ class View : public QOpenGLWindow
 public:
     View(int refreshRate = 1000);
 
-    void         initializeGL();
-    void         keyPressEvent(QKeyEvent *event);
-    void         mouseMoveEvent(QMouseEvent *event);
-    void         mousePressEvent(QMouseEvent *);
-    void         paintGL();
-    void         resizeGL(int w, int h);
-    void         setContext(QOpenGLContext *context) { mContext = context; }
-    virtual void stage() = 0;
-    void         toggleFullScreen();
 
-public slots:
+private slots:
     void setDebugger(bool active);
     void timeOutSlot();
 
@@ -38,20 +29,33 @@ protected slots:
     void printLog(const QOpenGLDebugMessage &msg);
 
 protected:
+    void         initializeGL();
+    void         paintGL();
+    void         resizeGL(int w, int h);
+    virtual void stage() = 0;
+
     Scene              *mScene;        // the container of the objects to be drawn
 
 private:
+    void         keyPressEvent(QKeyEvent *event);
+    void         mouseMoveEvent(QMouseEvent *event);
+    void         mousePressEvent(QMouseEvent *);
+    void         setContext(QOpenGLContext *context) { mContext = context; }
+    void         setEyePosition();
+    void         toggleFullScreen();
+
     float              mAspect;        // aspect ratio
     QVector3D          mViewCenter;    // center of view tha the eye is looking at
     QVector3D          mEyePos;        // eye position
+    double             mEyePhi;        // azimuth angle of eye
+    double             mEyeR;          // distance of eye from view center
+    double             mEyeTheta;      // polar angle of eye
     QVector3D          mEyeUp;         // up direction with respect to eye
     QOpenGLContext     *mContext;      // the context of the scene
     QOpenGLDebugLogger *mDebugLogger;  // engine to log debug messages from QOpenGL
     bool               mFullScreen;    // full screen mode yes or no
     QPointF            mMousePosition; // current position of the mouse
     bool               mMouseClicked;  // mose clicked yes or no
-    float              mPhiRotation;   // phi of rotation controlled by the mouse
-    float              mThetaRotation; // theta of rotation controlled by the mouse
     QTimer             *mTimer;        // timer to control the screen refresment
 };
 
