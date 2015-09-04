@@ -1,0 +1,3 @@
+[submodule "cutegl"]
+	path = cutegl
+	url = git@github.com:dridk/cutegl.git
