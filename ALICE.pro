@@ -27,4 +27,7 @@ HEADERS += \
     alice.h \
     laboratoryview.h
 
+RESOURCES += \
+    textures.qrc
+
 
