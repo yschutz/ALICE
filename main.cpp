@@ -14,26 +14,26 @@ int main(int argc, char *argv[])
 {
     QGuiApplication a(argc, argv);
 
-// --- METHODE FACILE ------
-//        View * view = new View();
+    // --- METHODE FACILE ------
+//    View * view = new View();
 
 
-//      ModelMesh * mesh = new ModelMesh(":/teapot.obj");
+//    ModelMesh * mesh = new ModelMesh(":/man.obj");
 
-//        mesh->setTextureImage(":/textures/damier.png");
-//        view->scene()->addMesh(mesh);
-//        view->show();
+//    mesh->setTextureImage(":/textures/damier.png");
+//    view->scene()->addMesh(mesh);
+//    view->show();
 
-//        view->scene()->setDebugView(true);
-// -------------------------
+//    view->scene()->setDebug(true);
+    // -------------------------
 
 
-// ---- METHODE ON AIME SE PRENDRE LA TETE
+    // ---- METHODE ON AIME SE PRENDRE LA TETE
     LaboratoryView w;
     w.scene()->setDebug(false);
 
     w.show();
-// -------------------------
+    // -------------------------
 
 
     return a.exec();
