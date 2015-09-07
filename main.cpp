@@ -7,7 +7,7 @@
 #include "modelmesh.h"
 #include "annulusmesh.h"
 #include "tube.h"
-
+#include <QVector2D>
 using namespace cgl;
 
 int main(int argc, char *argv[])
@@ -16,16 +16,22 @@ int main(int argc, char *argv[])
 
 // --- METHODE FACILE ------
 //        View * view = new View();
-//        ModelMesh * mesh = new ModelMesh(":/images/alice.obj");
-//        mesh->scale(5);
-//        mesh->setTextureImage(":/textures/images/IronRed.jpg");
+
+
+//      ModelMesh * mesh = new ModelMesh(":/teapot.obj");
+
+//        mesh->setTextureImage(":/textures/damier.png");
 //        view->scene()->addMesh(mesh);
 //        view->show();
+
+//        view->scene()->setDebugView(true);
 // -------------------------
 
 
 // ---- METHODE ON AIME SE PRENDRE LA TETE
     LaboratoryView w;
+    w.scene()->setDebug(false);
+
     w.show();
 // -------------------------
 

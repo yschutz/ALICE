@@ -36,6 +36,8 @@ void Tube::makeMesh()
     for(int index = 0; index < cyOu.verticesCount(); index++) {
         addVertex(cyOu.vertices().at(index));
     }
+
+    computeNormal();
 }
 
 
