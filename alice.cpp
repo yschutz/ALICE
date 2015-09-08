@@ -1,6 +1,6 @@
 #include "alice.h"
 #include "annulusmesh.h"
-#include "tube.h"
+#include "tubemesh.h"
 
 //===================================================================
 Alice::Alice(QObject *parent) : QObject(parent)
@@ -50,7 +50,7 @@ void Alice::CreateL3()
     l3F->translate(0.0, 0.0, kLength / 2.0);
     mElements.append(l3F);
 
-    Tube *l3Body = new Tube(kOuterRadius, kInnerRadius, kSides, kLength); // the body of L3
+    cgl::TubeMesh *l3Body = new cgl::TubeMesh(kOuterRadius, kInnerRadius, kSides, kLength); // the body of L3
     l3Body->setObjectName(QString("L3Body"));
     l3Body->setTextureImage(":/textures/images/IronRed.jpg");
     l3Body->rotate(kRotate, 0.0, 0.0, 1.0);

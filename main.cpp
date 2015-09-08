@@ -6,7 +6,6 @@
 #include "cubemesh.h"
 #include "modelmesh.h"
 #include "annulusmesh.h"
-#include "tube.h"
 #include <QVector2D>
 using namespace cgl;
 
