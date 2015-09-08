@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
         mesh->setTextureImage(":/textures/damier.png");
         view->scene()->addMesh(mesh);
         view->show();
+        mesh->translate(0,-20,0);
 
         view->scene()->setDebug(true);
 // -------------------------
