@@ -13,7 +13,6 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    tube.cpp \
     alice.cpp \
     laboratoryview.cpp
 
@@ -23,7 +22,6 @@ SOURCES += main.cpp \
 include(cutegl/cutegl.pri)
 
 HEADERS += \
-    tube.h \
     alice.h \
     laboratoryview.h
 
