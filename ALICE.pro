@@ -14,7 +14,9 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     alice.cpp \
-    laboratoryview.cpp
+    laboratoryview.cpp \
+    particle.cpp \
+    collision.cpp
 
 
 
@@ -23,7 +25,9 @@ include(cutegl/cutegl.pri)
 
 HEADERS += \
     alice.h \
-    laboratoryview.h
+    laboratoryview.h \
+    particle.h \
+    collision.h
 
 RESOURCES += \
     textures.qrc

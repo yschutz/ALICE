@@ -6,8 +6,6 @@
 #include "cubemesh.h"
 #include "modelmesh.h"
 #include "annulusmesh.h"
-#include "vertex.h"
-
 #include <QVector2D>
 using namespace cgl;
 
@@ -18,9 +16,11 @@ int main(int argc, char *argv[])
 // --- METHODE FACILE ------
 //        View * view = new View();
 
-
 //      AnnulusMesh * mesh = new AnnulusMesh(5.0, 4.0, 4);
-
+//        mesh->setTextureImage(":/textures/damier.png");
+//        view->scene()->addMesh(mesh);
+//        view->show();
+//        mesh->translate(0,-20,0);
 //        mesh->setTextureImage(":/textures/images/BlueQuark.png");
 //        view->scene()->addMesh(mesh);
 //        view->show();

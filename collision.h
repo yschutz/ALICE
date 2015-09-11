@@ -1,25 +1,30 @@
-#ifndef COLLISION_H
-#define COLLISION_H
+#ifndef Collision_H
+#define Collision_H
 
 #include <QObject>
+
 #include "particle.h"
 
 class Collision : public QObject
 {
     Q_OBJECT
 public:
-    explicit Collision(QObject *parent = 0);
+   explicit Collision(QObject *parent = 0);
+   ~Collision();
 
-    QList<Particle*> particlesFS() const { return mParticlesFS; }
+//    void Draw(qreal xcent, qreal ycent, qreal zcent) const;
 
-private:
+    QList<Particle*> finalStateParticles() const { return mFSParticles; }
+    
+protected:
     void addHadrons(int nHadrons);
     void addParticles(Particle::PARTICLETYPE type, int howMany);
-    void addQuarks(int nQuarks);
+    void addQuarks(int howMany);
 
-    QList<Particle*>   mParticlesFS; // final state particles
-    int                mHadrons;     // number of hadrons
-    int                mQuarks;      // number of quarks
+private:
+    QList<Particle*> mFSParticles; // final state particles
+    int              mHadrons;     // number of hadrons
+    int              mQuarks;      // number of quarks
 };
 
-#endif // COLLISION_H
+#endif // Collision_H

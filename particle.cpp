@@ -1,59 +1,68 @@
+#include <QDebug>
+#include <QImage>
 #include <qmath.h>
-#include "particle.h"
+#include <QString>
+#include "Particle.h"
 
-//===================================================================
-Particle::Particle(PARTICLETYPE type, QObject *parent) : Sphere(parent),
-    mType(type), mVelocity(0.0, 0.0, 0.0)
+//=====================================================================================
+Particle::Particle(PARTICLETYPE type, QObject *parent) : cgl::SphereMesh(parent),
+    mPosition(0.0, 0.0, 0.0), mType(type), mVelocity(0.0, 0.0, 0.0)
 {
-    // ctor
+    setParent(parent);
     setObjectName(name());
 
     mTextures[RED]   = ":/textures/images/RedQuark.png";
     mTextures[BLUE]  = ":/textures/images/BlueQuark.png";
     mTextures[GREEN] = ":/textures/images/GreenQuark.png";
     mTextures[WHITE] = ":/textures/images/WhiteHadron.png";
-
-    mSeg   = 20;
+    double radius   = 0.0;
+    int    segments = 20;
     switch (type) {
     case QUARK:
-        mRadius = 0.5;
+        radius = 0.5;
         break;
     case HADRON:
-        mRadius = 1.0;
+        radius = 1.0;
         break;
     default:
         break;
     }
-
+    setRadius(radius);
+    setSeg(segments);
     makeMesh();
 }
 
-//===================================================================
-Particle::COLOR Particle::color() const
+//=====================================================================================
+Particle::~Particle()
 {
-    // return color charge
-       COLOR rv;
-       switch (mColor) {
-       case RED:
-           rv = RED;
-           break;
-       case BLUE:
-           rv = BLUE;
-           break;
-       case GREEN:
-           rv = GREEN;
-           break;
-       case WHITE:
-           rv = WHITE;
-           break;
-       default:
-           rv = NONE;
-           break;
-       }
-       return rv;
 }
 
-//===================================================================
+//=====================================================================================
+Particle::COLOR Particle::color() const
+{
+ // return color charge
+    COLOR rv;
+    switch (mColor) {
+    case RED:
+        rv = RED;
+        break;
+    case BLUE:
+        rv = BLUE;
+        break;
+    case GREEN:
+        rv = GREEN;
+        break;
+    case WHITE:
+        rv = WHITE;
+        break;
+    default:
+        rv = NONE;
+        break;
+    }
+    return rv;
+}
+
+//=====================================================================================
 const char *Particle::colorName() const
 {
     // returns the color name
@@ -78,7 +87,7 @@ const char *Particle::colorName() const
     return name;
 }
 
-//===================================================================
+//=====================================================================================
 QString Particle::name() const
 {
     // return the name of the particle
@@ -97,8 +106,15 @@ QString Particle::name() const
     }
 }
 
-//===================================================================
-void Particle::setColor(Particle::COLOR color)
+//=====================================================================================
+void Particle::print() const
+{
+    // print info on the particle
+    qDebug() << Q_FUNC_INFO << name() << "color charge =" << colorName();
+}
+
+//=====================================================================================
+void Particle::setColor(COLOR color)
 {
     // set the color charge of the particle
 
@@ -114,7 +130,16 @@ void Particle::setColor(Particle::COLOR color)
     setTextureImage(mTextures[mColor]);
 }
 
-//===================================================================
+//=====================================================================================
+void Particle::move(qreal time)
+{
+    // set the particle position at time t
+    mPosition.setX(mPosition.x() + mVelocity.x() * time);
+    mPosition.setY(mPosition.y() + mVelocity.y() * time);
+    mPosition.setZ(mPosition.z() + mVelocity.z() * time);
+}
+
+//=====================================================================================
 void Particle::setVelocity(double betat, double betaz)
 {
     // set the 3D velocity vector of particle: betat (transverse velocity), betaz (longitudinal velocity)
@@ -129,3 +154,4 @@ void Particle::setVelocity(double betat, double betaz)
     sign = (2 * ((qreal)qrand() / (qreal) RAND_MAX) - 1.0) > 0 ? 1 : -1 ;
     mVelocity.setY(betat * y * sign);
 }
+
