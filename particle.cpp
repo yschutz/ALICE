@@ -2,7 +2,7 @@
 #include <QImage>
 #include <qmath.h>
 #include <QString>
-#include "Particle.h"
+#include "particle.h"
 
 //=====================================================================================
 Particle::Particle(PARTICLETYPE type, QObject *parent) : cgl::SphereMesh(parent),

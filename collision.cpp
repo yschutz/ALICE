@@ -1,7 +1,7 @@
 #include <QDebug>
 #include <QImage>
 #include <QTime>
-#include "Collision.h"
+#include "collision.h"
 
 //=====================================================================================
 Collision::Collision(QObject *parent) : QObject(parent), mQuarks(0)
