@@ -45,7 +45,7 @@ void Alice::CreateL3()
 
     cgl::AnnulusMesh *l3F = new cgl::AnnulusMesh(kOuterRadius, kInnerRadius, kSides);       // front of L3
     l3F->setObjectName(QString("L3F"));
-    l3F->setTextureImage(":/textures/images/BlueQuark.png");
+    l3F->setTextureImage(":/textures/images/IronRed.jpg");
     l3F->rotate(kRotate, 0.0, 0.0, 1.0);
     l3F->translate(0.0, 0.0, kLength / 2.0);
     mElements.append(l3F);
