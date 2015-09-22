@@ -1,5 +1,7 @@
+#include <qmath.h>
 #include "alice.h"
 #include "annulusmesh.h"
+#include "torusmesh.h"
 #include "tubemesh.h"
 
 //===================================================================
@@ -18,6 +20,7 @@ Alice::Alice(QObject *parent) : QObject(parent)
 //===================================================================
 void Alice::Create()
 {
+    CreateLHC();
     CreateL3();
 
     for(int index = 0; index < mElements.size(); index++)
@@ -55,5 +58,20 @@ void Alice::CreateL3()
     l3Body->setTextureImage(":/textures/images/IronRed.jpg");
     l3Body->rotate(kRotate, 0.0, 0.0, 1.0);
     mElements.append(l3Body);
+}
+
+//===================================================================
+void Alice::CreateLHC()
+{
+    // create the LHC ring
+
+    const double kRadius         = 26659 / 2 / M_PI; // circumference is 26659 m
+    const double kBeamPipeRadius = 53E-3;            // beam pipe radius is 53mm
+
+
+    cgl::TorusMesh *lhc = new cgl::TorusMesh(kBeamPipeRadius, kRadius, 20);
+    lhc->setObjectName(QString("LHC ring"));
+    lhc->setTextureImage(":/textures/images/brushed_aluminium_texture__tileable___2048x2048__by_fabooguy-d6z6quk.jpg");
+    mElements.append(lhc);
 }
 

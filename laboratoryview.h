@@ -9,8 +9,6 @@ class LaboratoryView : public cgl::View
 
 public:
     LaboratoryView();
-
-
 };
 
 #endif // LABORATORYVIEW_H

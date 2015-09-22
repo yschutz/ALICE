@@ -17,6 +17,7 @@ public:
 private:
     void Create();
     void CreateL3();
+    void CreateLHC();
 
     QList<cgl::Mesh*> mElements; // list of meshes needed to build ALICE
 };

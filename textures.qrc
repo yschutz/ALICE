@@ -5,6 +5,7 @@
         <file>images/RedQuark.png</file>
         <file>images/WhiteHadron.png</file>
         <file>images/IronRed.jpg</file>
+        <file>images/brushed_aluminium_texture__tileable___2048x2048__by_fabooguy-d6z6quk.jpg</file>
     </qresource>
     <qresource prefix="/">
         <file>images/alice.obj</file>

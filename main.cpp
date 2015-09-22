@@ -5,7 +5,7 @@
 #include "spheremesh.h"
 #include "cubemesh.h"
 #include "modelmesh.h"
-#include "annulusmesh.h"
+#include "torusmesh.h"
 #include <QVector2D>
 using namespace cgl;
 
@@ -16,12 +16,11 @@ int main(int argc, char *argv[])
 // --- METHODE FACILE ------
 //        View * view = new View();
 
-//      AnnulusMesh * mesh = new AnnulusMesh(5.0, 4.0, 4);
-//        mesh->setTextureImage(":/textures/damier.png");
+//      TorusMesh * mesh = new TorusMesh(1.0, 20.0, 20);
+//      mesh->setTextureImage(":/textures/images/brushed_aluminium_texture__tileable___2048x2048__by_fabooguy-d6z6quk.jpg");
 //        view->scene()->addMesh(mesh);
 //        view->show();
 //        mesh->translate(0,-20,0);
-//        mesh->setTextureImage(":/textures/images/BlueQuark.png");
 //        view->scene()->addMesh(mesh);
 //        view->show();
 //        for (int index = 0; index < mesh->verticesCount(); index++)
@@ -32,7 +31,7 @@ int main(int argc, char *argv[])
 
  //---- METHODE ON AIME SE PRENDRE LA TETE
     LaboratoryView w;
-//    w.scene()->setDebug(false);
+    w.scene()->setDebug(false);
 
     w.show();
 // -------------------------
