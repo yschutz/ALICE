@@ -38,5 +38,3 @@ void LaboratoryView::scale(float updown)
             element->scale(updown, updown, updown);
     }
 }
-
-

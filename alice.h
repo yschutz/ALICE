@@ -15,7 +15,7 @@ class Alice : public QObject
 public:
 
     enum ELEMENTS {
-        L3B, L3F, L3BODY, BEAMSPIPE, NELE
+        L3B, L3F, L3BODY, SPD1, SPD2, SDD1, SDD2, SSD1, SSD2, BEAMSPIPE, NELE
     };
 
     explicit Alice(QObject *parent = 0);
@@ -29,6 +29,7 @@ public:
 
 private:
     void Create();
+    void CreateITS();
     void CreateL3();
     void CreateLHC();
 
