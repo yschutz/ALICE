@@ -157,11 +157,11 @@ void Alice::CreateLHC()
 
     qDebug() << Q_FUNC_INFO;
 
-    mLHC = new cgl::TorusMesh(kBeamPipeRadius, kRadius, 500);
+    mLHC = new cgl::TorusMesh(kBeamPipeRadius, kRadius, 200);
     mLHC->setObjectName(mElementsName[BEAMSPIPE]);
-    mLHC->setTextureImage(":/textures/images/brushed_aluminium_texture__tileable___2048x2048__by_fabooguy-d6z6quk.jpg");
-    mLHC->translate(kRadius, 0.0, 0.0);
+    mLHC->setTextureImage(":/textures/images/BeamPipeTexture.jpg");
     mLHC->rotate(90.0, 1.0, 0.0, 0.0);
+    mLHC->translate(kRadius, 0.0, 0.0);
     mElements.append(mLHC);
 }
 
@@ -175,7 +175,7 @@ void Alice::CreateTPC()
     const double kLength = tpcLength();
 
     // Inner vessel
-    const int    kSegInnerVessel = 100;
+    const int    kSegInnerVessel = 18;
     const double kTPCInnerRadius = 1.140 / 2.0;
     cgl::CylinderMesh *TPCInnerVessel = new cgl::CylinderMesh(kTPCInnerRadius, kSegInnerVessel, kLength);
     TPCInnerVessel->setObjectName(mElementsName[TPCINNER]);
@@ -183,7 +183,7 @@ void Alice::CreateTPC()
     mElements.append(TPCInnerVessel);
 
     // Outer vessel
-    const int    kSegOuterVessel = 500;
+    const int    kSegOuterVessel = 18;
     const double kTPCOuterRadius = 5.560 / 2.0;
     cgl::CylinderMesh *TPCOuterVessel = new cgl::CylinderMesh(kTPCOuterRadius, kSegOuterVessel, kLength);
     TPCOuterVessel->setObjectName(mElementsName[TPCOUTER]);

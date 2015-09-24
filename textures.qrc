@@ -10,6 +10,7 @@
         <file>images/TPCTexture.jpg</file>
         <file>images/TPCEndPlateTexture.jpg</file>
         <file>images/TPCCETexture.jpg</file>
+        <file>images/BeamPipeTexture.jpg</file>
     </qresource>
     <qresource prefix="/">
         <file>images/alice.obj</file>

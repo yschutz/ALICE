@@ -16,8 +16,8 @@ int main(int argc, char *argv[])
 // --- METHODE FACILE ------
 //        View * view = new View();
 
-//      TorusMesh * mesh = new TorusMesh(1.0, 20.0, 20);
-//      mesh->setTextureImage(":/textures/images/brushed_aluminium_texture__tileable___2048x2048__by_fabooguy-d6z6quk.jpg");
+//      TorusMesh * mesh = new TorusMesh(5.0, 20.0, 20);
+//      mesh->setTextureImage(":/textures/images/BeamPipeTexture.jpg");
 //        view->scene()->addMesh(mesh);
 //        view->show();
 //        mesh->translate(0,-20,0);
