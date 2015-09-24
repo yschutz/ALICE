@@ -34,6 +34,14 @@ void LaboratoryView::scale(float updown)
             element->translate(0.0, 0.0, mAlice.l3Length() / 2.0);
             element->scale(updown, updown, updown);
             element->translate(0.0, 0.0, -mAlice.l3Length() / 2.0);
+        } else if(element->objectName() == mAlice.ElementName((Alice::TPCEPF))) {
+            element->translate(0.0, 0.0, -mAlice.tpcLength() / 2.0);
+            element->scale(updown, updown, updown);
+            element->translate(0.0, 0.0, mAlice.tpcLength() / 2.0);
+        } else if(element->objectName() == mAlice.ElementName((Alice::TPCEPB))) {
+            element->translate(0.0, 0.0, mAlice.tpcLength() / 2.0);
+            element->scale(updown, updown, updown);
+            element->translate(0.0, 0.0, -mAlice.tpcLength() / 2.0);
         } else
             element->scale(updown, updown, updown);
     }

@@ -14,13 +14,18 @@ Alice::Alice(QObject *parent) : QObject(parent)
     mElementsName.resize(NELE);
     mElementsName[L3B]       = "L3B";
     mElementsName[L3F]       = "L3F";
+    mElementsName[L3BODY]    = "L3Body";
     mElementsName[SPD1]      = "Pixel Layer 1";
     mElementsName[SPD2]      = "Pixel Layer 2";
     mElementsName[SDD1]      = "Drift Layer 1";
     mElementsName[SDD2]      = "Drift Layer 2";
     mElementsName[SSD1]      = "Strip Layer 1";
     mElementsName[SSD2]      = "Strip Layer 2";
-    mElementsName[L3BODY]    = "L3Body";
+    mElementsName[TPCINNER]  = "TPC Inner Vessel";
+    mElementsName[TPCOUTER]  = "TPC Outer Vessel";
+    mElementsName[TPCEPF]    = "TPC End Plate Front";
+    mElementsName[TPCEPB]    = "TPC End Plate Back";
+    mElementsName[TPCCE]     = "TPC End Central Electrode";
     mElementsName[BEAMSPIPE] = "Beams Pipe";
 
     Create();
@@ -42,6 +47,7 @@ void Alice::Create()
 {
     CreateLHC();
     CreateITS();
+    CreateTPC();
     CreateL3();
 
     for(int index = 0; index < mElements.size(); index++)
@@ -151,11 +157,58 @@ void Alice::CreateLHC()
 
     qDebug() << Q_FUNC_INFO;
 
-    mLHC = new cgl::TorusMesh(kBeamPipeRadius, kRadius, 100);
+    mLHC = new cgl::TorusMesh(kBeamPipeRadius, kRadius, 500);
     mLHC->setObjectName(mElementsName[BEAMSPIPE]);
     mLHC->setTextureImage(":/textures/images/brushed_aluminium_texture__tileable___2048x2048__by_fabooguy-d6z6quk.jpg");
     mLHC->translate(kRadius, 0.0, 0.0);
     mLHC->rotate(90.0, 1.0, 0.0, 0.0);
     mElements.append(mLHC);
+}
+
+//===================================================================
+void Alice::CreateTPC()
+{
+    // create the TPC
+
+    // all dimensions in meters
+
+    const double kLength = tpcLength();
+
+    // Inner vessel
+    const int    kSegInnerVessel = 100;
+    const double kTPCInnerRadius = 1.140 / 2.0;
+    cgl::CylinderMesh *TPCInnerVessel = new cgl::CylinderMesh(kTPCInnerRadius, kSegInnerVessel, kLength);
+    TPCInnerVessel->setObjectName(mElementsName[TPCINNER]);
+    TPCInnerVessel->setTextureImage(":/textures/images/TPCTexture.jpg");
+    mElements.append(TPCInnerVessel);
+
+    // Outer vessel
+    const int    kSegOuterVessel = 500;
+    const double kTPCOuterRadius = 5.560 / 2.0;
+    cgl::CylinderMesh *TPCOuterVessel = new cgl::CylinderMesh(kTPCOuterRadius, kSegOuterVessel, kLength);
+    TPCOuterVessel->setObjectName(mElementsName[TPCOUTER]);
+    TPCOuterVessel->setTextureImage(":/textures/images/TPCTexture.jpg");
+    mElements.append(TPCOuterVessel);
+
+    //central Electode
+    cgl::AnnulusMesh *centralElectrode = new cgl::AnnulusMesh(kTPCOuterRadius, kTPCInnerRadius, kSegOuterVessel);
+    centralElectrode->setObjectName(mElementsName[TPCCE]);
+    centralElectrode->setTextureImage(":/textures/images/TPCCETexture.jpg");
+    mElements.append(centralElectrode);
+
+    // End Plates
+    const int kSegEndPlate = 18;
+    cgl::AnnulusMesh *endPlateF = new cgl::AnnulusMesh(kTPCOuterRadius, kTPCInnerRadius, kSegEndPlate);
+    endPlateF->translate(0.0, 0.0, kLength / 2.0);
+    endPlateF->setObjectName(mElementsName[TPCEPF]);
+    endPlateF->setTextureImage(":/textures/images/TPCEndPlateTexture.jpg");
+    mElements.append(endPlateF);
+
+    cgl::AnnulusMesh *endPlateB = new cgl::AnnulusMesh(kTPCOuterRadius, kTPCInnerRadius, kSegEndPlate);
+    endPlateB->translate(0.0, 0.0, -kLength / 2.0);
+    endPlateB->setObjectName(mElementsName[TPCEPB]);
+    endPlateB->setTextureImage(":/textures/images/TPCEndPlateTexture.jpg");
+    mElements.append(endPlateB);
+
 }
 

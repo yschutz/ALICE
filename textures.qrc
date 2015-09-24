@@ -7,6 +7,9 @@
         <file>images/IronRed.jpg</file>
         <file>images/brushed_aluminium_texture__tileable___2048x2048__by_fabooguy-d6z6quk.jpg</file>
         <file>images/gold-texture.jpg</file>
+        <file>images/TPCTexture.jpg</file>
+        <file>images/TPCEndPlateTexture.jpg</file>
+        <file>images/TPCCETexture.jpg</file>
     </qresource>
     <qresource prefix="/">
         <file>images/alice.obj</file>
