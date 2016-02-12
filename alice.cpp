@@ -1,6 +1,8 @@
 #include "alice.h"
 #include "annulusmesh.h"
+#include "cubemesh.h"
 #include "cylindermesh.h"
+#include "polygonmesh.h"
 #include "torusmesh.h"
 #include "tubemesh.h"
 
@@ -26,9 +28,28 @@ Alice::Alice(QObject *parent) : QObject(parent)
     mElementsName[TPCEPF]    = "TPC End Plate Front";
     mElementsName[TPCEPB]    = "TPC End Plate Back";
     mElementsName[TPCCE]     = "TPC End Central Electrode";
+    mElementsName[TRD0]      = "TRD outer envelop";
+    mElementsName[TRD1]      = "TRD layer 1";
+    mElementsName[TRD2]      = "TRD layer 2";
+    mElementsName[TRD3]      = "TRD layer 3";
+    mElementsName[TRD4]      = "TRD layer 4";
+    mElementsName[TRD5]      = "TRD layer 5";
+    mElementsName[TRD6]      = "TRD layer 6";
+    mElementsName[TRD01]     = "TRD EP 01";
+    mElementsName[TRD12]     = "TRD EP 12";
+    mElementsName[TRD23]     = "TRD EP 23";
+    mElementsName[TRD34]     = "TRD EP 34";
+    mElementsName[TRD45]     = "TRD EP 45";
+    mElementsName[TRD56]     = "TRD EP 56";
+    mElementsName[TRD60]     = "TRD EP 60";
+    mElementsName[TOFCYL]    = "TOF Cylinder";
+    mElementsName[TOFBA]     = "TOF backward cap";
+    mElementsName[TOFFO]     = "TOF forward cap";
+    mElementsName[EMCM]      = "EMCAL Module";
+    mElementsName[EMCSM]      = "EMCAL Super Module";
     mElementsName[BEAMSPIPE] = "Beams Pipe";
 
-    Create();
+    create();
     if (mElements.isEmpty()) {
         qWarning("Alice::Alice: ALICE elements have not been created");
         exit(QtWarningMsg);
@@ -43,19 +64,22 @@ Alice::~Alice()
 }
 
 //===================================================================
-void Alice::Create()
+void Alice::create()
 {
-    CreateLHC();
-    CreateITS();
-    CreateTPC();
-    CreateL3();
+    createLHC();
+    createITS();
+    createTPC();
+    createTRD();
+    createTOF();
+    createEMCAL();
+    createL3();
 
     for(int index = 0; index < mElements.size(); index++)
         qDebug() << Q_FUNC_INFO<< mElements.at(index)->objectName();
 }
 
 //===================================================================
-void Alice::CreateITS()
+void Alice::createITS()
 {
     // create ITS 6 concentric cylinders
 
@@ -109,12 +133,68 @@ void Alice::CreateITS()
     ssd2->setObjectName(mElementsName[SSD2]);
     ssd2->setTextureImage(":/textures/images/gold-texture.jpg");
     mElements.append(ssd2);
+}
 
+//===================================================================
+void Alice::createEMCAL()
+{
+    // create EMCAL
+    const int kSuperModulesFull =  1; //10;
+    const int kSuperModulesHalf = 2;
+
+    for (int index = 0; index < kSuperModulesFull; index++)
+        createEMCALSuperModule(true);
+
+    for (int index = 0; index < kSuperModulesHalf; index++)
+        createEMCALSuperModule(false);
+}
+
+//===================================================================
+void Alice::createEMCALSuperModule(bool full)
+{
+    // create one EMCAL Super Module full or half
+
+    static int countH = 0;
+
+    // the SM
+    const double kEMCSMHeight = 0.4018;     // meters
+    const double kEMCSMWidth  = 12 * 0.120; // meters
+    const double kEMCSMLength = 24 * 0.120; // meters
+
+    if (full) {
+        cgl::CubeMesh *emcSM = new cgl::CubeMesh(kEMCSMWidth, kEMCSMLength, kEMCSMHeight);
+        emcSM->setObjectName(mElementsName[EMCSM]);
+        emcSM->setTextureImage(":/textures/images/texture-1075992_960_720.jpg");
+        emcSM->translate(-4.2, 0.0, 0.0);
+        emcSM->rotate(90.0, 0, 1, 0);
+        emcSM->rotate(90.0, 0, 0, 1);
+        mElements.append(emcSM);
+
+//        createEMCALModule();
+    }
+    else
+        qDebug() << Q_FUNC_INFO << ++countH;
 
 }
 
 //===================================================================
-void Alice::CreateL3()
+void Alice::createEMCALModule()
+{
+    // create one EMCAL Module, a module is made of 2x2 Towers
+
+    // the tower
+    const double kEMCTWidth      = 0.06;   // meters
+    const double kEMCTLength     = 0.3418; // meters
+    const int    kTowersInModule = 2;
+
+    cgl::CubeMesh *emcM = new cgl::CubeMesh(kTowersInModule * kEMCTWidth, kTowersInModule * kEMCTWidth, kEMCTLength);
+    emcM->setObjectName(mElementsName[EMCM]);
+    emcM->setTextureImage(":/textures/images/texture-1075992_960_720.jpg");
+    mElements.append(emcM);
+}
+
+//===================================================================
+void Alice::createL3()
 {
     // create the L3 magnet
 
@@ -147,7 +227,7 @@ void Alice::CreateL3()
 }
 
 //===================================================================
-void Alice::CreateLHC()
+void Alice::createLHC()
 {
     // create the LHC ring
 
@@ -157,7 +237,7 @@ void Alice::CreateLHC()
 
     qDebug() << Q_FUNC_INFO;
 
-    mLHC = new cgl::TorusMesh(kBeamPipeRadius, kRadius, 200);
+    mLHC = new cgl::TorusMesh(kBeamPipeRadius, kRadius, 200, 1);
     mLHC->setObjectName(mElementsName[BEAMSPIPE]);
     mLHC->setTextureImage(":/textures/images/BeamPipeTexture.jpg");
     mLHC->rotate(90.0, 1.0, 0.0, 0.0);
@@ -166,18 +246,46 @@ void Alice::CreateLHC()
 }
 
 //===================================================================
-void Alice::CreateTPC()
+void Alice::createTOF()
+{
+    // Create the TOF
+
+    const double kTOFInnerRadius = 3.70;        // meters
+    const double kTOFOuterRadius = 4.00;        // meters
+    const int    kTOFSectors     = 18;          // number of azimuthal sectors
+    const double kTOFLength      = tofLength(); // meters
+
+    cgl::AnnulusMesh *TOFback = new cgl::AnnulusMesh(kTOFOuterRadius, kTOFInnerRadius, kTOFSectors);
+    TOFback->translate(0.0, 0.0, -kTOFLength / 2.0);
+    TOFback->setObjectName(mElementsName[TOFBA]);
+    TOFback->setTextureImage(":/textures/images/TPCTexture.jpg");
+    mElements.append(TOFback);
+
+    cgl::AnnulusMesh *TOFforw = new cgl::AnnulusMesh(kTOFOuterRadius, kTOFInnerRadius, kTOFSectors);
+    TOFforw->translate(0.0, 0.0, kTOFLength / 2.0);
+    TOFforw->setObjectName(mElementsName[TOFFO]);
+    TOFforw->setTextureImage(":/textures/images/TPCTexture.jpg");
+    mElements.append(TOFforw);
+
+    cgl::TubeMesh *TOFcyl = new cgl::TubeMesh(kTOFOuterRadius, kTOFInnerRadius, kTOFSectors, kTOFLength);
+    TOFcyl->setObjectName(mElementsName[TOFCYL]);
+    TOFcyl->setTextureImage(":/textures/images/TPCTexture.jpg");
+    mElements.append(TOFcyl);
+}
+
+//===================================================================
+void Alice::createTPC()
 {
     // create the TPC
 
     // all dimensions in meters
 
-    const double kLength = tpcLength();
+    const double kTPCLength = tpcLength();
 
     // Inner vessel
     const int    kSegInnerVessel = 18;
     const double kTPCInnerRadius = 1.140 / 2.0;
-    cgl::CylinderMesh *TPCInnerVessel = new cgl::CylinderMesh(kTPCInnerRadius, kSegInnerVessel, kLength);
+    cgl::CylinderMesh *TPCInnerVessel = new cgl::CylinderMesh(kTPCInnerRadius, kSegInnerVessel, kTPCLength);
     TPCInnerVessel->setObjectName(mElementsName[TPCINNER]);
     TPCInnerVessel->setTextureImage(":/textures/images/TPCTexture.jpg");
     mElements.append(TPCInnerVessel);
@@ -185,7 +293,7 @@ void Alice::CreateTPC()
     // Outer vessel
     const int    kSegOuterVessel = 18;
     const double kTPCOuterRadius = 5.560 / 2.0;
-    cgl::CylinderMesh *TPCOuterVessel = new cgl::CylinderMesh(kTPCOuterRadius, kSegOuterVessel, kLength);
+    cgl::CylinderMesh *TPCOuterVessel = new cgl::CylinderMesh(kTPCOuterRadius, kSegOuterVessel, kTPCLength);
     TPCOuterVessel->setObjectName(mElementsName[TPCOUTER]);
     TPCOuterVessel->setTextureImage(":/textures/images/TPCTexture.jpg");
     mElements.append(TPCOuterVessel);
@@ -199,16 +307,86 @@ void Alice::CreateTPC()
     // End Plates
     const int kSegEndPlate = 18;
     cgl::AnnulusMesh *endPlateF = new cgl::AnnulusMesh(kTPCOuterRadius, kTPCInnerRadius, kSegEndPlate);
-    endPlateF->translate(0.0, 0.0, kLength / 2.0);
+    endPlateF->translate(0.0, 0.0, kTPCLength / 2.0);
     endPlateF->setObjectName(mElementsName[TPCEPF]);
     endPlateF->setTextureImage(":/textures/images/TPCEndPlateTexture.jpg");
     mElements.append(endPlateF);
 
     cgl::AnnulusMesh *endPlateB = new cgl::AnnulusMesh(kTPCOuterRadius, kTPCInnerRadius, kSegEndPlate);
-    endPlateB->translate(0.0, 0.0, -kLength / 2.0);
+    endPlateB->translate(0.0, 0.0, -kTPCLength / 2.0);
     endPlateB->setObjectName(mElementsName[TPCEPB]);
     endPlateB->setTextureImage(":/textures/images/TPCEndPlateTexture.jpg");
     mElements.append(endPlateB);
 
+}
+
+//===================================================================
+void Alice::createTRD()
+{
+    // create the TRD
+
+    // all dimensions in meters
+
+    const double kTRDLength  = trdLength();
+    const double kTRDRou      = 3.69;
+    const double kTRDRin      = 2.9;
+    const double kTRDRLayer1 = 2.945;
+    const double kTRDRLayer2 = 3.071;
+    const double kTRDRLayer3 = 3.197;
+    const double kTRDRLayer4 = 3.323;
+    const double kTRDRLayer5 = 3.449;
+    const double kTRDRLayer6 = 3.575;
+    const int    kTRDPhiSeg  = 18;
+
+    // outer envelops
+    cgl::CylinderMesh *TRDOuterEnvelopIn = new cgl::CylinderMesh(kTRDRin, kTRDPhiSeg, kTRDLength);
+    TRDOuterEnvelopIn->setObjectName(mElementsName[TRD0]);
+    TRDOuterEnvelopIn->setTextureImage(":/textures/images/gold-texture.jpg");
+    mElements.append(TRDOuterEnvelopIn);
+
+    cgl::CylinderMesh *TRDOuterEnvelopOu = new cgl::CylinderMesh(kTRDRou, kTRDPhiSeg, kTRDLength);
+    TRDOuterEnvelopOu->setObjectName(mElementsName[TRD0]);
+    TRDOuterEnvelopOu->setTextureImage(":/textures/images/gold-texture.jpg");
+    mElements.append(TRDOuterEnvelopOu);
+
+    //layers and endplates
+    cgl::CylinderMesh *TRDLayer1 = new cgl::CylinderMesh(kTRDRLayer1, kTRDPhiSeg, kTRDLength);
+    TRDLayer1->setObjectName(mElementsName[TRD1]);
+    TRDLayer1->setTextureImage(":/textures/images/gold-texture.jpg");
+    mElements.append(TRDLayer1);
+
+    cgl::AnnulusMesh *TRDEP01 = new cgl::AnnulusMesh(kTRDRLayer1, kTRDRin, kTRDPhiSeg);
+    TRDEP01->translate(0.0, 0.0, kTRDLength / 2.0);
+    TRDEP01->setObjectName(mElementsName[TRD01]);
+    TRDEP01->setTextureImage(":/textures/images/TPCEndPlateTexture.jpg");
+    mElements.append(TRDEP01);
+
+    cgl::CylinderMesh *TRDLayer2 = new cgl::CylinderMesh(kTRDRLayer2, kTRDPhiSeg, kTRDLength);
+    TRDLayer2->setObjectName(mElementsName[TRD1]);
+    TRDLayer2->setTextureImage(":/textures/images/gold-texture.jpg");
+    mElements.append(TRDLayer2);
+
+
+    cgl::CylinderMesh *TRDLayer3 = new cgl::CylinderMesh(kTRDRLayer3, kTRDPhiSeg, kTRDLength);
+    TRDLayer3->setObjectName(mElementsName[TRD1]);
+    TRDLayer3->setTextureImage(":/textures/images/gold-texture.jpg");
+    mElements.append(TRDLayer3);
+
+
+    cgl::CylinderMesh *TRDLayer4 = new cgl::CylinderMesh(kTRDRLayer4, kTRDPhiSeg, kTRDLength);
+    TRDLayer4->setObjectName(mElementsName[TRD1]);
+    TRDLayer4->setTextureImage(":/textures/images/gold-texture.jpg");
+    mElements.append(TRDLayer4);
+
+    cgl::CylinderMesh *TRDLayer5 = new cgl::CylinderMesh(kTRDRLayer5, kTRDPhiSeg, kTRDLength);
+    TRDLayer5->setObjectName(mElementsName[TRD1]);
+    TRDLayer5->setTextureImage(":/textures/images/gold-texture.jpg");
+    mElements.append(TRDLayer5);
+
+
+    cgl::CylinderMesh *TRDLayer6 = new cgl::CylinderMesh(kTRDRLayer6, kTRDPhiSeg, kTRDLength);
+    TRDLayer6->setObjectName(mElementsName[TRD6]);
+    TRDLayer6->setTextureImage(":/textures/images/gold-texture.jpg");
+    mElements.append(TRDLayer6);
 }
 

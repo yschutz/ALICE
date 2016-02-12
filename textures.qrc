@@ -11,6 +11,7 @@
         <file>images/TPCEndPlateTexture.jpg</file>
         <file>images/TPCCETexture.jpg</file>
         <file>images/BeamPipeTexture.jpg</file>
+        <file>images/texture-1075992_960_720.jpg</file>
     </qresource>
     <qresource prefix="/">
         <file>images/alice.obj</file>
