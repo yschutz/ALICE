@@ -66,13 +66,13 @@ Alice::~Alice()
 //===================================================================
 void Alice::create()
 {
-    createLHC();
+//    createLHC();
     createITS();
     createTPC();
     createTRD();
     createTOF();
     createEMCAL();
-    createL3();
+//    createL3();
 
     for(int index = 0; index < mElements.size(); index++)
         qDebug() << Q_FUNC_INFO<< mElements.at(index)->objectName();
@@ -139,35 +139,44 @@ void Alice::createITS()
 void Alice::createEMCAL()
 {
     // create EMCAL
-    const int kSuperModulesFull =  1; //10;
-    const int kSuperModulesHalf = 2;
+    const int kSuperModulesFull =  5; //10;
+    const int kSuperModulesHalf = 0;
 
     for (int index = 0; index < kSuperModulesFull; index++)
-        createEMCALSuperModule(true);
+        createEMCALSuperModule(index, true);
 
     for (int index = 0; index < kSuperModulesHalf; index++)
-        createEMCALSuperModule(false);
+        createEMCALSuperModule(index, false);
 }
 
 //===================================================================
-void Alice::createEMCALSuperModule(bool full)
+void Alice::createEMCALSuperModule(int index, bool full)
 {
     // create one EMCAL Super Module full or half
 
     static int countH = 0;
 
     // the SM
-    const double kEMCSMHeight = 0.4018;     // meters
-    const double kEMCSMWidth  = 12 * 0.120; // meters
-    const double kEMCSMLength = 24 * 0.120; // meters
+    const float kEMCSMHeight = 0.4018;    // meters
+    const float kEMCSMWidth  = 12 * 0.06; // meters
+    const float kEMCSMLength = 24 * 0.06; // meters
+    mEMCALAngle    = qAbs(2 * qAsin(kEMCSMWidth / emcPosX())) * 1.01;
+
+    float angle = mEMCALAngle * index;
 
     if (full) {
-        cgl::CubeMesh *emcSM = new cgl::CubeMesh(kEMCSMWidth, kEMCSMLength, kEMCSMHeight);
-        emcSM->setObjectName(mElementsName[EMCSM]);
+        cgl::CubeMesh *emcSM;
+        if (index == 0)
+            emcSM = new cgl::CubeMesh(kEMCSMWidth, kEMCSMLength, kEMCSMHeight);
+        else
+            emcSM = new cgl::CubeMesh(*static_cast<cgl::CubeMesh*>(mElements.last()));
+
         emcSM->setTextureImage(":/textures/images/texture-1075992_960_720.jpg");
-        emcSM->translate(-4.2, 0.0, 0.0);
+        emcSM->setObjectName(QString("%1 %2").arg(mElementsName[EMCSM]).arg(index));
+        emcSM->translate(emcPosX() * qCos(angle), -emcPosX() * qSin(angle), 0.0);
         emcSM->rotate(90.0, 0, 1, 0);
         emcSM->rotate(90.0, 0, 0, 1);
+        emcSM->rotate(-qRadiansToDegrees(angle), 0, 1, 0);
         mElements.append(emcSM);
 
 //        createEMCALModule();

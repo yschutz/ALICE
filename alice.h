@@ -31,12 +31,14 @@ public:
     float             tofLength() const { return 1.7829 * 2 + 1.47 * 2 + 1.14; } // TOF length n meters
     float             tpcLength() const { return 5.100; }                        // TPC length in meter
     float             trdLength() const { return 7.0; }                          // TRD length in meter
+    float             emcAngle()  const { return mEMCALAngle;}                   // azimuthal angle covered by one EMCAL super module
+    float             emcPosX()   const { return -4.4; }                         // x distance of EMCAL super module to ALICE center, im meter
 
 private:
     void create();
     void createITS();
     void createEMCAL();
-    void createEMCALSuperModule(bool full);
+    void createEMCALSuperModule(int index, bool full);
     void createEMCALModule();
     void createL3();
     void createLHC();
@@ -44,6 +46,7 @@ private:
     void createTPC();
     void createTRD();
 
+    float mEMCALAngle;                     //azimuthal angle covered by one EMCAL super module
     QList<cgl::Mesh*> mElements;           // list of meshes needed to build ALICE
     QVector<QString>  mElementsName;       // name of the various elements
     cgl::TorusMesh    *mLHC;               // the LHC beam pipe

@@ -54,6 +54,19 @@ void LaboratoryView::scale(float updown)
             element->translate(0.0, 0.0, -mAlice.trdLength() / 2.0);
             element->scale(updown, updown, updown);
             element->translate(0.0, 0.0, mAlice.trdLength() / 2.0);
+        } else if(element->objectName().contains(mAlice.elementName(Alice::EMCSM))) {
+            float angle = mAlice.emcAngle() * element->objectName().right(1).toInt();
+            qDebug() << Q_FUNC_INFO << angle;
+            element->rotate(qRadiansToDegrees(angle), 0, 1, 0);
+            element->rotate(-90.0, 0, 0, 1);
+            element->rotate(-90.0, 0, 1, 0);
+            element->translate(-mAlice.emcPosX() * qCos(angle), mAlice.emcPosX() * qSin(angle), 0.0);
+            element->scale(updown, updown, updown);
+            element->translate(mAlice.emcPosX() * qCos(angle), -mAlice.emcPosX() * qSin(angle), 0.0);
+            element->rotate(90.0, 0, 1, 0);
+            element->rotate(90.0, 0, 0, 1);
+            element->rotate(-qRadiansToDegrees(angle), 0, 1, 0);
+
         } else
             element->scale(updown, updown, updown);
     }
