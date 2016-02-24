@@ -46,7 +46,8 @@ Alice::Alice(QObject *parent) : QObject(parent)
     mElementsName[TOFBA]     = "TOF backward cap";
     mElementsName[TOFFO]     = "TOF forward cap";
     mElementsName[EMCM]      = "EMCAL Module";
-    mElementsName[EMCSM]      = "EMCAL Super Module";
+    mElementsName[EMCSM]     = "EMCAL Super Module";
+    mElementsName[PHOSM]     = "PHOS Module";
     mElementsName[BEAMSPIPE] = "Beams Pipe";
 
     create();
@@ -68,11 +69,12 @@ void Alice::create()
 {
 //    createLHC();
 //    createITS();
-    createTPC();
+//    createTPC();
 //    createTRD();
-//    createTOF();
+    createTOF();
     createEMCAL();
-//    createL3();
+    createPHOS();
+    //    createL3();
 
     for(int index = 0; index < mElements.size(); index++)
         qDebug() << Q_FUNC_INFO<< mElements.at(index)->objectName();
@@ -140,7 +142,7 @@ void Alice::createEMCAL()
 {
     // create EMCAL
     const int kSuperModulesFull = 5;
-    const int kSuperModulesHalf = 0;
+    const int kSuperModulesHalf = 2;
 
     for (int index = 0; index < kSuperModulesFull; index++)
         createEMCALSuperModule(index, true);
@@ -152,52 +154,58 @@ void Alice::createEMCAL()
 //===================================================================
 void Alice::createEMCALSuperModule(int index, bool full)
 {
-    // create one EMCAL Super Module full or half
+    // create two EMCAL Super Module full or half
 
-    static int countF = 0;
-    static int countH = 0;
+    static int count = 0;
 
     // the SM
-    const float kEMCSMHeight = 0.4018;    // meters
-    const float kEMCSMWidth  = 12 * 0.06; // meters
-    const float kEMCSMLength = 24 * 0.06; // meters
-    mEMCALAngle    = qAbs(2 * qAsin(kEMCSMWidth / emcPosX()));
+    const float kEMCSMHeight = 0.246;            // meters
+    const float kEMCSMWidth  = 12 * 0.06 * 1.058; // meters
+    const float kEMCSMLength = 24 * 0.06 * 1.058; // meters
+    const float kEMCSMPosX   = 4.4;               // x distance of EMCAL super module to ALICE center in meters
 
-    float angle = mEMCALAngle * index + mEMCALAngle / 2.0;
+    float emcAngle = qAbs(2 * qAsin(kEMCSMWidth / kEMCSMPosX));
+
+    const float spacexy = 1.1;
+    const float spacez  = 1.01;
+    float width         = kEMCSMWidth ;
+    float angle         = 0.0;
+
+    cgl::CubeMesh *emcSM1, *emcSM2;
 
     if (full) {
-        cgl::CubeMesh *emcSM1, *emcSM2;
+       angle = emcAngle * index + emcAngle / 2.0;
+    } else {
+        width /= 2.0;
         if (index == 0)
-            emcSM1 = new cgl::CubeMesh(kEMCSMWidth, kEMCSMLength, kEMCSMHeight);
-        else
-            emcSM1 = new cgl::CubeMesh(*static_cast<cgl::CubeMesh*>(mElements.last()));
-
-        emcSM1->setTextureImage(":/textures/images/texture-1075992_960_720.jpg");
-
-        emcSM2 = new cgl::CubeMesh(*emcSM1);
-
-        emcSM1->setObjectName(QString("%1 %2").arg(mElementsName[EMCSM]).arg(countF));
-        emcSM2->setObjectName(QString("%1 %2").arg(mElementsName[EMCSM]).arg(++countF));
-
-        float space = 1.1;
-        emcSM1->translate(emcPosX() * qCos(angle) * space, -emcPosX() * qSin(angle) * space, 1.01 * kEMCSMLength);
-        emcSM1->rotate(90.0, 0, 1, 0);
-        emcSM1->rotate(90.0, 0, 0, 1);
-        emcSM1->rotate(-qRadiansToDegrees(angle), 0, 1, 0);
-        mElements.append(emcSM1);
-
-        emcSM2->translate(emcPosX() * qCos(angle) * space, -emcPosX() * qSin(angle) * space, -1.01 * kEMCSMLength);
-        emcSM2->rotate(90.0, 0, 1, 0);
-        emcSM2->rotate(90.0, 0, 0, 1);
-        emcSM2->rotate(-qRadiansToDegrees(angle), 0, 1, 0);
-        mElements.append(emcSM2);
-
-        countF++;
-//        createEMCALModule();
+            angle = - emcAngle / 4.0;
+        else if (index == 1)
+            angle = emcAngle * 5 + emcAngle / 4.0;
     }
+    if (index == 0)
+        emcSM1 = new cgl::CubeMesh(width, kEMCSMLength, kEMCSMHeight);
     else
-        qDebug() << Q_FUNC_INFO << ++countH;
+        emcSM1 = new cgl::CubeMesh(*static_cast<cgl::CubeMesh*>(mElements.last()));
 
+    emcSM1->setTextureImage(":/textures/images/texture-1075992_960_720.jpg");
+
+    emcSM2 = new cgl::CubeMesh(*emcSM1);
+    emcSM1->setObjectName(QString("%1 %2").arg(mElementsName[EMCSM]).arg(count));
+    emcSM2->setObjectName(QString("%1 %2").arg(mElementsName[EMCSM]).arg(++count));
+
+    emcSM1->translate(-kEMCSMPosX * qCos(angle) * spacexy, kEMCSMPosX * qSin(angle) * spacexy, spacez * kEMCSMLength);
+    emcSM1->rotate(90.0, 0, 1, 0);
+    emcSM1->rotate(90.0, 0, 0, 1);
+    emcSM1->rotate(-qRadiansToDegrees(angle), 0, 1, 0);
+    mElements.append(emcSM1);
+
+    emcSM2->translate(-kEMCSMPosX * qCos(angle) * spacexy, kEMCSMPosX * qSin(angle) * spacexy, -spacez * kEMCSMLength);
+    emcSM2->rotate(90.0, 0, 1, 0);
+    emcSM2->rotate(90.0, 0, 0, 1);
+    emcSM2->rotate(-qRadiansToDegrees(angle), 0, 1, 0);
+    mElements.append(emcSM2);
+
+    count++;
 }
 
 //===================================================================
@@ -221,11 +229,11 @@ void Alice::createL3()
 {
     // create the L3 magnet
 
-    const double kInnerRadius =   5.930; //meters
-    const double kOuterRadius =   7.900; //meters
-    const double kLength      =  l3Length(); //meters
-    const int    kSides       =   8;      //it's an octogone
-    const double kRotate      = 180. / kSides;
+    const float kInnerRadius =   5.930; //meters
+    const float kOuterRadius =   7.900; //meters
+    const float kLength      =  14.1;   //L3 Length in meters
+    const int    kSides      =   8;      //it's an octogone
+    const float kRotate      = 180. / kSides;
 
 
     cgl::AnnulusMesh *l3B = new cgl::AnnulusMesh(kOuterRadius, kInnerRadius, kSides);       // back of L3
@@ -254,11 +262,8 @@ void Alice::createLHC()
 {
     // create the LHC ring
 
-    const double kRadius         = lhcRadius();
-    const double kBeamPipeRadius = 30E-3; //53E-3;            // beam pipe radius is 53mm
-
-
-    qDebug() << Q_FUNC_INFO;
+    const float kRadius         = 26659 / 2 / M_PI;          // circumference is 26659 m
+    const float kBeamPipeRadius = 30E-3; //53E-3;            // beam pipe radius is 53mm
 
     mLHC = new cgl::TorusMesh(kBeamPipeRadius, kRadius, 200, 1);
     mLHC->setObjectName(mElementsName[BEAMSPIPE]);
@@ -269,14 +274,48 @@ void Alice::createLHC()
 }
 
 //===================================================================
+void Alice::createPHOS()
+{
+    // create PHOS
+    const float kPHOSPosR    = 4.6;  // distance to center in meters
+    const int   kPHOSModules = 5;    // number of modules;
+    const float kPHOSWidth   = 56 * 0.022 / 1.9;  // width of one module in meters
+    const float kPHOSLength  = 64 * 0.022 / 1.9;  // length of one module in meters
+    const float kPHOSDepth   = 0.18; // length of one crystal
+
+    const float phosAngle = qAbs(2 * qAsin(kPHOSWidth / kPHOSPosR));
+
+    cgl::CubeMesh *phosM;
+    float spacexy;
+    for (int index = 0; index < kPHOSModules; index++) {
+        if (index == 0) {
+            phosM = new cgl::CubeMesh(kPHOSWidth, kPHOSLength, kPHOSDepth);
+            phosM->setTextureImage(":/textures/images/texture-1075992_960_720.jpg");
+        } else {
+            phosM = new cgl::CubeMesh(*static_cast<cgl::CubeMesh *>(mElements.last()));
+        }
+        phosM->setObjectName(QString("%1 %2").arg(mElementsName[PHOSM]).arg(index));
+        float angle = 2 * phosAngle - phosAngle * index;
+        if (angle == 0)
+            spacexy = 1.0;
+        else
+            spacexy = 1.0;
+        phosM->translate(kPHOSPosR * spacexy * qSin(angle), -kPHOSPosR * qCos(angle), 0.0);
+        phosM->rotate(90.0, 1, 0, 0);
+        phosM->rotate(qRadiansToDegrees(angle), 0, 1, 0);
+        mElements.append(phosM);
+    }
+}
+
+//===================================================================
 void Alice::createTOF()
 {
     // Create the TOF
 
-    const double kTOFInnerRadius = 3.70;        // meters
-    const double kTOFOuterRadius = 4.00;        // meters
-    const int    kTOFSectors     = 18;          // number of azimuthal sectors
-    const double kTOFLength      = tofLength(); // meters
+    const float kTOFInnerRadius = 3.70;                         // meters
+    const float kTOFOuterRadius = 4.00;                         // meters
+    const int    kTOFSectors     = 18;                           // number of azimuthal sectors
+    const float kTOFLength      = 1.7829 * 2 + 1.47 * 2 + 1.14; // TOF length in meters
 
     cgl::AnnulusMesh *TOFback = new cgl::AnnulusMesh(kTOFOuterRadius, kTOFInnerRadius, kTOFSectors);
     TOFback->translate(0.0, 0.0, -kTOFLength / 2.0);
@@ -303,11 +342,11 @@ void Alice::createTPC()
 
     // all dimensions in meters
 
-    const double kTPCLength = tpcLength();
+    const float kTPCLength = 5.1; // TPC length in meter
 
     // Inner vessel
     const int    kSegInnerVessel = 18;
-    const double kTPCInnerRadius = 1.140 / 2.0;
+    const float kTPCInnerRadius = 1.140 / 2.0;
     cgl::CylinderMesh *TPCInnerVessel = new cgl::CylinderMesh(kTPCInnerRadius, kSegInnerVessel, kTPCLength);
     TPCInnerVessel->setObjectName(mElementsName[TPCINNER]);
     TPCInnerVessel->setTextureImage(":/textures/images/TPCTexture.jpg");
@@ -350,7 +389,7 @@ void Alice::createTRD()
 
     // all dimensions in meters
 
-    const double kTRDLength  = trdLength();
+    const double kTRDLength  = 7.0;  // TRD length in meter
     const double kTRDRou      = 3.69;
     const double kTRDRin      = 2.9;
     const double kTRDRLayer1 = 2.945;
