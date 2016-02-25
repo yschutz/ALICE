@@ -6,12 +6,12 @@
 LaboratoryView::LaboratoryView() : cgl::View()
 {
     // ctor
-    mAlice.setParent(this);
+    Alice * alice = new Alice();
+    alice->setParent(this);
+    addObject(KALICE, alice);
 
-    for(int index = 0; index < mAlice.elements().size(); index++)
-        scene()->addMesh(mAlice.elements().at(index));
-
-
+    for(int index = 0; index < alice->elements().size(); index++)
+        scene()->addMesh(alice->elements().at(index));
 }
 
 //===================================================================
@@ -19,8 +19,20 @@ void LaboratoryView::scale(float updown)
 {
     // scales ALICE and LHC (LHC must be translated back and forth)
 
-    for (int index = 0; index < mAlice.elements().size(); index++) {
-        cgl::Mesh *element = mAlice.elements().at(index);
+    Alice *alice = dynamic_cast<Alice*>(getObject(KALICE));
+    for (int index = 0; index < alice->elements().size(); index++) {
+        cgl::Mesh *element = alice->elements().at(index);
             element->scale(updown, updown, updown);
     }
+}
+
+//===================================================================
+void LaboratoryView::setOpacity()
+{
+    Alice *alice = dynamic_cast<Alice*>(getObject(KALICE));
+    for (int index = 0; index < alice->elements().size(); index++) {
+        cgl::Mesh *element = alice->elements().at(index);
+            element->setOpacity(0.5);
+    }
+
 }

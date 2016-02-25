@@ -2,12 +2,12 @@
 #define ALICE_H
 
 #include <qmath.h>
-#include <QObject>
 
 #include "mesh.h"
 #include "torusmesh.h"
+#include "viewobject.h"
 
-class Alice : public QObject
+class Alice : public cgl::ViewObject
 {
     Q_OBJECT
     Q_ENUMS(ELEMENTS)
@@ -40,9 +40,6 @@ private:
     void createTPC();
     void createTRD();
 
-//    float mEMCALAngle;                     //azimuthal angle covered by one EMCAL super module
-    QList<cgl::Mesh*> mElements;           // list of meshes needed to build ALICE
-    QVector<QString>  mElementsName;       // name of the various elements
     cgl::TorusMesh    *mLHC;               // the LHC beam pipe
 };
 

@@ -10,12 +10,13 @@ class LaboratoryView : public cgl::View
     Q_OBJECT
 
 public:
+    enum { KALICE };
     LaboratoryView();
 
     void scale(float updown);
+    void setOpacity();
 
 private:
-    Alice mAlice; // the ALICE object including LHCC
 };
 
 #endif // LABORATORYVIEW_H

@@ -7,7 +7,7 @@
 #include "tubemesh.h"
 
 //===================================================================
-Alice::Alice(QObject *parent) : QObject(parent)
+Alice::Alice(QObject *parent) : cgl::ViewObject(parent)
 {
     // decfault ctor: defines the shapes making ALICE
 
@@ -61,7 +61,6 @@ Alice::Alice(QObject *parent) : QObject(parent)
 Alice::~Alice()
 {
     //dtor
-    mElements.clear();
 }
 
 //===================================================================
