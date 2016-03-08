@@ -2,12 +2,12 @@
 #define ALICE_H
 
 #include <qmath.h>
+#include <QObject>
 
 #include "mesh.h"
 #include "torusmesh.h"
-#include "viewobject.h"
 
-class Alice : public cgl::ViewObject
+class Alice : public QObject
 {
     Q_OBJECT
     Q_ENUMS(ELEMENTS)
@@ -26,6 +26,7 @@ public:
     void              init();
     QString           elementName(ELEMENTS index) const { return mElementsName[index]; }
     QList<cgl::Mesh*> elements() const { return mElements; }
+    QString           whereIs() const ;
 
 private:
     void create();
@@ -40,6 +41,9 @@ private:
     void createTPC();
     void createTRD();
 
+
+    QList<cgl::Mesh*> mElements;            // list of various objects in ALICE
+    QVector<QString>    mElementsName;       // list of names of various objects in ALICE
     cgl::TorusMesh    *mLHC;               // the LHC beam pipe
 };
 

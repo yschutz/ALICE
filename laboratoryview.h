@@ -1,9 +1,9 @@
 #ifndef LABORATORYVIEW_H
 #define LABORATORYVIEW_H
 
-#include "alice.h"
 #include "view.h"
 
+class Alice;
 
 class LaboratoryView : public cgl::View
 {
@@ -14,9 +14,9 @@ public:
     LaboratoryView();
 
     void scale(float updown);
-    void setOpacity();
 
 private:
+    Alice *mALICE; // the ALICE experiment
 };
 
 #endif // LABORATORYVIEW_H

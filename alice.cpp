@@ -7,7 +7,7 @@
 #include "tubemesh.h"
 
 //===================================================================
-Alice::Alice(QObject *parent) : cgl::ViewObject(parent)
+Alice::Alice(QObject *parent) : QObject(parent)
 {
     // decfault ctor: defines the shapes making ALICE
 
@@ -64,16 +64,26 @@ Alice::~Alice()
 }
 
 //===================================================================
+QString Alice::whereIs() const
+{
+    // check if point is inside a volume of ALICE
+
+    for (int index = 0; index < mElements.size(); index++)
+        qDebug() << "Checking" << mElementsName[index];
+    return "";
+}
+
+//===================================================================
 void Alice::create()
 {
 //    createLHC();
 //    createITS();
 //    createTPC();
 //    createTRD();
-    createTOF();
-    createEMCAL();
-    createPHOS();
-    //    createL3();
+//    createTOF();
+//    createEMCAL();
+//    createPHOS();
+    createL3();
 
     for(int index = 0; index < mElements.size(); index++)
         qDebug() << Q_FUNC_INFO<< mElements.at(index)->objectName();
@@ -153,7 +163,7 @@ void Alice::createEMCAL()
 //===================================================================
 void Alice::createEMCALSuperModule(int index, bool full)
 {
-    // create two EMCAL Super Module full or half
+    // create two EMCAL Super Modules full or half
 
     static int count = 0;
 
